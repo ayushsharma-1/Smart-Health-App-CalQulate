@@ -215,7 +215,7 @@ export default function UploadPage() {
       return;
     }
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/process-image`;
     const groqApiKey = process.env.NEXT_PUBLIC_GROQ_API_URL;
 
     if (!apiUrl || !groqApiKey) {
@@ -230,11 +230,13 @@ export default function UploadPage() {
 
     try {
       const formData = new FormData();
-      formData.append("image", selectedImage); // Try "file" if "image" fails
-      // Log FormData entries for debugging
+      formData.append("image", selectedImage); // Use "image" as the key
+
+      // Log FormData and selected image for debugging
       for (let pair of formData.entries()) {
-        console.log("FormData entry:", pair[0], pair[1].name || pair[1]);
+        console.log("FormData entry:", pair[0], pair[1].name || pair[1], typeof pair[1]);
       }
+      console.log("Selected Image:", selectedImage, selectedImage instanceof File, "Size:", selectedImage.size);
 
       const res = await fetch(apiUrl, {
         method: "POST",
@@ -242,7 +244,7 @@ export default function UploadPage() {
       });
       if (!res.ok) {
         const errorText = await res.text();
-        console.log("Server response:", errorText); // Log full response for debugging
+        console.log("Server response:", errorText);
         throw new Error(`Upload failed: ${errorText || res.statusText}`);
       }
 
