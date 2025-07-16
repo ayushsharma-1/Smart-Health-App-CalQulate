@@ -1,90 +1,126 @@
 "use client"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { Menu, X, Scan, Home, Info, HelpCircle, Mail } from "lucide-react"
 
 export default function Navbar() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const navItems = [
-    { href: "/", label: "Home" },
-    { href: "/upload", label: "Scan Label" },
-    { href: "/about", label: "About" },
-    { href: "/faq", label: "FAQ" },
+    { href: "/", label: "Home", icon: Home },
+    { href: "/upload", label: "Scan", icon: Scan },
+    { href: "/about", label: "About", icon: Info },
+    { href: "/faq", label: "FAQ", icon: HelpCircle },
+    { href: "/contact", label: "Contact", icon: Mail },
   ]
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
-      <nav className="max-w-7xl mx-auto flex items-center justify-between py-4 px-4">
-        <Link href="/" className="text-2xl font-bold gradient-text">
-          CalQulate
-        </Link>
-
-        {/* Desktop Navigation */}
-        <ul className="hidden md:flex space-x-8">
-          {navItems.map((item) => (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className={`text-sm font-medium transition-colors duration-200 hover:text-primary-600 ${
-                  pathname === item.href ? "text-primary-600 border-b-2 border-primary-600 pb-1" : "text-gray-600"
-                }`}
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-
-        <div className="hidden md:block">
-          <Link href="/upload" className="btn-primary">
-            Start Scanning
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled ? "bg-white/80 backdrop-blur-xl shadow-2xl border-b border-white/20" : "bg-transparent"
+      }`}
+    >
+      <nav className="container-custom">
+        <div className="flex items-center justify-between py-4">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-3 group">
+            <div className="w-10 h-10 bg-gradient-to-r from-primary-600 to-accent-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
+              <Scan className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-2xl font-bold gradient-text">CalQulate</span>
           </Link>
-        </div>
 
-        {/* Mobile Menu Button */}
-        <button className="md:hidden p-2" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
-          <div className="w-6 h-6 flex flex-col justify-center items-center">
-            <span
-              className={`bg-gray-800 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${isMenuOpen ? "rotate-45 translate-y-1" : "-translate-y-0.5"}`}
-            ></span>
-            <span
-              className={`bg-gray-800 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm my-0.5 ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
-            ></span>
-            <span
-              className={`bg-gray-800 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${isMenuOpen ? "-rotate-45 -translate-y-1" : "translate-y-0.5"}`}
-            ></span>
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-1">
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const isActive = pathname === item.href
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
+                    isActive
+                      ? "bg-primary-100 text-primary-700 shadow-md"
+                      : "text-secondary-600 hover:text-primary-600 hover:bg-primary-50"
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{item.label}</span>
+                </Link>
+              )
+            })}
           </div>
-        </button>
+
+          {/* CTA Button */}
+          <div className="hidden lg:block">
+            <Link href="/upload" className="btn-primary">
+              <Scan className="w-4 h-4 mr-2" />
+              Start Scanning
+            </Link>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden p-2 rounded-xl hover:bg-secondary-100 transition-colors duration-300"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? (
+              <X className="w-6 h-6 text-secondary-700" />
+            ) : (
+              <Menu className="w-6 h-6 text-secondary-700" />
+            )}
+          </button>
+        </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-100 md:hidden">
-            <ul className="py-4">
-              {navItems.map((item) => (
-                <li key={item.href}>
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl shadow-2xl border-b border-white/20 animate-slide-down">
+            <div className="container-custom py-6">
+              <div className="space-y-2">
+                {navItems.map((item) => {
+                  const Icon = item.icon
+                  const isActive = pathname === item.href
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-all duration-300 ${
+                        isActive
+                          ? "bg-primary-100 text-primary-700"
+                          : "text-secondary-600 hover:text-primary-600 hover:bg-primary-50"
+                      }`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span>{item.label}</span>
+                    </Link>
+                  )
+                })}
+                <div className="pt-4 border-t border-secondary-200">
                   <Link
-                    href={item.href}
-                    className={`block px-4 py-3 text-sm font-medium transition-colors duration-200 hover:bg-gray-50 ${
-                      pathname === item.href ? "text-primary-600 bg-primary-50" : "text-gray-600"
-                    }`}
+                    href="/upload"
+                    className="btn-primary w-full justify-center"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {item.label}
+                    <Scan className="w-4 h-4 mr-2" />
+                    Start Scanning
                   </Link>
-                </li>
-              ))}
-              <li className="px-4 py-3">
-                <Link
-                  href="/upload"
-                  className="btn-primary w-full text-center block"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Start Scanning
-                </Link>
-              </li>
-            </ul>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </nav>

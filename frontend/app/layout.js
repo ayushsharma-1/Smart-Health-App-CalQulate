@@ -1,9 +1,7 @@
 import "./globals.css"
 import { Inter } from "next/font/google"
 import Navbar from "./components/Navbar"
-import Footer  from "./components/Footer"
-import { Providers } from "./components/Providers"
-import { Suspense } from "react"
+import Footer from "./components/Footer"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -12,41 +10,22 @@ const inter = Inter({
 })
 
 export const metadata = {
-  title: "CalQulate - Smart Food Label Scanner",
-  description: "AI-powered nutrition analysis from food labels",
-  keywords: "nutrition, food label, scanner, AI, health, wellness",
-  authors: [{ name: "Ayush Sharma", url: "https://calqulate.ayushsharma.site" }],
-  creator: "CalQulate Team",
-  openGraph: {
-    title: "CalQulate - Smart Food Label Scanner",
-    description: "AI-powered nutrition analysis from food labels",
-    url: "https://calqulate.ayushsharma.site",
-    siteName: "CalQulate",
-  }, 
-}
-
-export const viewport = {
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 5,
-  userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#000000" },
-  ],
+  title: "CalQulate - AI Food Label Scanner",
+  description:
+    "Professional AI-powered nutrition analysis from food labels. Get instant, accurate insights for healthier choices.",
+  keywords: ["food scanner", "nutrition analysis", "AI", "health", "calories", "diet"],
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className={`${inter.className} flex flex-col min-h-screen bg-gray-50 antialiased`}>
-        <Providers>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </Suspense>
-        </Providers>
+      <body className={`${inter.className} min-h-screen antialiased`}>
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
       </body>
     </html>
   )
