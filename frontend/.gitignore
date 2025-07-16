@@ -108,3 +108,5 @@ public
 # Temporary folders
 tmp/
 temp/
+
+.package-lock.json
