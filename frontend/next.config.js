@@ -10,32 +10,9 @@ const nextConfig = {
     domains: ["localhost", "images.unsplash.com", "via.placeholder.com"],
     unoptimized: true,
   },
-  experimental: {
-    optimizeCss: true,
-  },
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
-  httpAgentOptions: {
-    keepAlive: true,
-  },
-  onDemandEntries: {
-    maxInactiveAge: 25 * 1000,
-    pagesBufferLength: 2,
-  },
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Custom webpack config
-    if (!dev && !isServer) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        "react/jsx-runtime.js": "preact/compat/jsx-runtime",
-        react: "preact/compat",
-        "react-dom/test-utils": "preact/test-utils",
-        "react-dom": "preact/compat",
-      }
-    }
-    return config
-  },
   async headers() {
     return [
       {
